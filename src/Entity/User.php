@@ -2,12 +2,27 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ApiResource(
+ *     collectionOperations={
+ *         "get"={"security"="is_granted('IS_AUTHENTICATED_FULLY')"},
+ *         "post"
+ *     },
+ *     itemOperations={
+ *          "get"={"security"="is_granted('IS_AUTHENTICATED_FULLY')"}, 
+ *          "put"={"security"="is_granted('IS_AUTHENTICATED_FULLY')"}, 
+ *          "delete"={"security"="is_granted('IS_AUTHENTICATED_FULLY')"}
+ *      }
+ * )
+ * @ApiFilter(SearchFilter::class, properties={"email": "exact"})
  */
 class User implements UserInterface
 {
